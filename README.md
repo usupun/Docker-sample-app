@@ -35,18 +35,21 @@ First, verify that Docker Desktop application is running if you are using window
 Open a terminal or command prompt and navigate to the directory containing the Dockerfile, application files, and requirements.txt.
 Build the Docker image for the main app using the following command:
 
-docker build -t myapp -f mainapp/Dockerfile.
+docker build -t myapp:v1 -f Dockerfile-mainapp .
+
 3. Build the Docker image for the API using the following command:
 
+docker build -t api:v1 -f Dockerfile-api .
 
-docker build -t api -f api/Dockerfile.
 4. Create a network so that both the containers run in same network
 
-docker create network mynetwork
+docker network create mynetwork
+
 5. Run the Docker containers for both applications using the following commands:
 
-docker run -d --name myapi_container -p 8000:8000 --network mynetwork myapi
-docker run -d --name myapp_container -p 5000:5000 --network mynetwork myapp
+docker run -d --name myapi_container -p 8000:8000 --network mynetwork api:v1
+docker run -d --name myapp_container -p 5000:5000 --network mynetwork myapp:v1
+
 The -p flag maps the container's ports to the host machine's ports, enabling access to the applications. Adjust the port numbers if needed.
 
 Access the main app at http://localhost:5000/ and verify that it fetches data from the API successfully.
